@@ -68,6 +68,7 @@ async function run() {
               application.company=job.company;
               application.company_logo=job.company_logo;
               application.location=job.location;
+              application.salaryRange=job.salaryRange;
             }
           }
           res.send(result);
@@ -77,6 +78,14 @@ async function run() {
           const result=await jobApplicationCollection.insertOne(application);
           res.send(result);
         })
+
+        app.delete('/job-applications/:id', async (req, res) => {
+          const id = req.params.id;
+          const query = { _id: new ObjectId(id) };
+          const result = await jobApplicationCollection.deleteOne(query);
+          res.send(result);
+      });
+      
 
   } finally {
     // Ensures that the client will close when you finish/error
