@@ -84,9 +84,23 @@ async function run() {
       }
     });
 
-   
+    //adding role for recruiter
 
+  app.patch('/users/:email', async (req, res) => {
+  const email = req.params.email;
+  const updateFields = req.body;
 
+  try {
+    const result = await usersCollection.updateOne(
+      { email },
+      { $set: updateFields }
+    );
+    res.send(result);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).send({ message: "Failed to update user" });
+  }
+});
 
 
 
