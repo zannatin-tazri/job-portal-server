@@ -37,6 +37,58 @@ async function run() {
     //job related apis
     const jobsCollection=client.db('jobPortal').collection('jobs');
     const jobApplicationCollection=client.db('jobPortal').collection('job_applications');
+    const usersCollection=client.db('jobPortal').collection('users');
+
+
+
+    // Save new user
+ // POST: Save a new user
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      console.log("Registering user:", user);
+
+      try {
+        const existingUser = await usersCollection.findOne({ email: user.email });
+        if (existingUser) {
+          console.log("User already exists:", user.email);
+          return res.status(409).send({ message: 'User already exists' });
+        }
+
+        const result = await usersCollection.insertOne(user);
+        console.log("User saved with ID:", result.insertedId);
+        res.status(201).send(result);
+      } catch (error) {
+        console.error("Failed to save user:", error);
+        res.status(500).send({ message: 'Failed to save user', error });
+      }
+    });
+
+    // GET: Get user by email or all users
+    app.get('/users', async (req, res) => {
+      const email = req.query.email;
+
+      try {
+        if (email) {
+          const user = await usersCollection.findOne({ email });
+          if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+          }
+          return res.send([user]);
+        }
+
+        const users = await usersCollection.find().toArray();
+        res.send(users);
+      } catch (error) {
+        console.error("Failed to retrieve users:", error);
+        res.status(500).send({ message: 'Failed to retrieve users', error });
+      }
+    });
+
+   
+
+
+
+
 
     app.get('/jobs', async(req,res)=>{
         const cursor=jobsCollection.find();
@@ -50,6 +102,12 @@ async function run() {
         const result= await jobsCollection.findOne(query);
         res.send(result);
         })
+
+    app.post('/jobs', async (req, res) => {
+    const job = req.body;
+    const result = await jobsCollection.insertOne(job);
+    res.send(result);
+});
 
         //job application apis
 
