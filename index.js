@@ -22,7 +22,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    console.log("✅ Connected to MongoDB");
+    console.log("Connected to MongoDB");
 
     const db = client.db('jobPortal');
     const jobsCollection = db.collection('jobs');
@@ -31,7 +31,7 @@ async function run() {
 
     // Root route
     app.get('/', (req, res) => {
-      res.send("🚀 Job is falling from the sky!");
+      res.send("Job is falling from the sky!");
     });
 
     // ===================== USERS =====================
@@ -88,7 +88,7 @@ async function run() {
       res.send(result);
     });
 
-    // ✅ Updated Job Fetch Route: Case-insensitive match with at least 2 matching skills
+    //  Updated Job Fetch Route: Case-insensitive match with at least 2 matching skills
     app.get('/jobs', async (req, res) => {
       try {
         const skillQuery = req.query.skills;
@@ -176,5 +176,5 @@ run().catch(console.dir);
 
 // Start server
 app.listen(port, () => {
-  console.log(`🚀 Job Portal API running on port: ${port}`);
+  console.log(`Job Portal API running on port: ${port}`);
 });
